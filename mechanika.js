@@ -1,74 +1,160 @@
-// Stav hry
-let donuts = 0;
-let donutsPerClick = 1;
-let donutsPerSecond = 0;
+// ==========================================
+// 1. STAV HRY A PROMĚNNÉ
+// ==========================================
+let score = 0;
+let cps = 0; // Donuts per second (DPS)
+let clickValue = 1; // Donuts per click (DPC)
 
-// Konfigurace vylepšení
-const UPGRADES = {
-  'extra-sprinkles': { cost: 25, clickAdd: 1, secAdd: 0 },
-  'glaze-machine':   { cost: 60, clickAdd: 0, secAdd: 1 },
-  'bigger-oven':      { cost: 260, clickAdd: 0, secAdd: 5 },
-  'pastry-chef':      { cost: 700, clickAdd: 10, secAdd: 0 }
-};
+// Pevné ceny podle vášho HTML
+const upgrade1Price = 25;  // Extra Sprinkles (+1/klik)
+const upgrade2Price = 60;  // Glaze Machine (+1/s)
+const upgrade3Price = 260; // Bigger Oven (+5/s)
+const upgrade4Price = 700; // Pastry Chef (+10/klik)
 
-// Získání prvků z HTML
+let currentMilestone = 'default';
+
+// ==========================================
+// 2. PRVKY Z HTML
+// ==========================================
 const donutsDisplay = document.getElementById('donuts');
 const dpsDisplay = document.getElementById('dps');
 const dpcDisplay = document.getElementById('dpc');
+
 const clickerButton = document.getElementById('clicker-button');
-const upgradesContainer = document.querySelector('.upgrades');
+const donutImage = clickerButton ? clickerButton.querySelector('img') : null;
 
-// Funkce pro aktualizaci všech textů A stavu tlačítek
-function updateDisplay() {
-  donutsDisplay.textContent = `Donuts: ${donuts}`;
-  dpsDisplay.textContent = `Donuts per second: ${donutsPerSecond}`;
-  dpcDisplay.textContent = `Donuts per click: ${donutsPerClick}`;
+const btnUpgrade1 = document.getElementById('upgrade1');
+const btnUpgrade2 = document.getElementById('upgrade2');
+const btnUpgrade3 = document.getElementById('upgrade3');
+const btnUpgrade4 = document.getElementById('upgrade4');
 
-  // Projde všechna vylepšení a vypne/zapne tlačítka podle počtu koblížků
-  Object.keys(UPGRADES).forEach(id => {
-    const card = document.getElementById(id);
-    if (card) {
-      const btn = card.querySelector('button');
-      if (btn) {
-        const canAfford = donuts >= UPGRADES[id].cost;
-        btn.disabled = !canAfford;
-        btn.style.opacity = canAfford ? '1' : '0.5';
-        btn.style.cursor = canAfford ? 'pointer' : 'not-allowed';
-      }
+// Cesty k obrázkům (upravte podle své složky)
+const DONUT_DEFAULT = './Assets/Images/DonutClickerIcon.png';
+const DONUT_GOLDEN  = './Assets/Images/ClickIconGolden.png';
+const DONUT_DIAMOND = './Assets/Images/ClickIconDiamond.png';
+
+// ==========================================
+// 3. LOGIKA ZMĚNY OBRÁZKU PODLE CPS (DPS)
+// ==========================================
+function updateDonutSkin() {
+    if (!donutImage) return;
+
+    // Milníky nastavené podle DPS (Donuts per second)
+    if (cps > 1000) {
+        if (currentMilestone !== 'diamond') {
+            donutImage.src = DONUT_DIAMOND;
+            currentMilestone = 'diamond';
+        }
+    } else if (cps > 100) {
+        if (currentMilestone !== 'golden') {
+            donutImage.src = DONUT_GOLDEN;
+            currentMilestone = 'golden';
+        }
+    } else {
+        if (currentMilestone !== 'default') {
+            donutImage.src = DONUT_DEFAULT;
+            currentMilestone = 'default';
+        }
     }
-  });
 }
 
-// 1. Klikání na koblížek
-clickerButton.addEventListener('click', () => {
-  donuts += donutsPerClick;
-  updateDisplay();
-});
+// Pomocná funkce pro nastavení průhlednosti (opacity) tlačítek
+function setButtonState(button, price) {
+    if (!button) return;
+    const canAfford = score >= price;
+    button.disabled = !canAfford;
+    button.style.opacity = canAfford ? '1' : '0.5';
+    button.style.cursor = canAfford ? 'pointer' : 'not-allowed';
+}
 
-// 2. Nakupování vylepšení
-upgradesContainer.addEventListener('click', (e) => {
-  if (e.target.tagName !== 'BUTTON') return;
+// ==========================================
+// 4. AKTUALIZACE UI A OPACITY
+// ==========================================
+function updateUI() {
+    // Uzamčení velikosti obrázku, aby po změně skinu nezměnil velikost
+    if (donutImage) {
+        donutImage.style.width = '200px';
+        donutImage.style.height = 'auto';
+        donutImage.style.objectFit = 'contain';
+    }
 
-  const card = e.target.closest('.upgrade');
-  if (!card) return;
+    if (donutsDisplay) donutsDisplay.textContent = `Donuts: ${Math.floor(score)}`;
+    if (dpsDisplay) dpsDisplay.textContent = `Donuts per second: ${cps}`;
+    if (dpcDisplay) dpcDisplay.textContent = `Donuts per click: ${clickValue}`;
 
-  const upgrade = UPGRADES[card.id];
+    // Nastavení opacity tlačítek podle aktuálního počtu donutů
+    setButtonState(btnUpgrade1, upgrade1Price);
+    setButtonState(btnUpgrade2, upgrade2Price);
+    setButtonState(btnUpgrade3, upgrade3Price);
+    setButtonState(btnUpgrade4, upgrade4Price);
 
-  if (upgrade && donuts >= upgrade.cost) {
-    donuts -= upgrade.cost;
-    donutsPerClick += upgrade.clickAdd;
-    donutsPerSecond += upgrade.secAdd;
-    updateDisplay();
-  }
-});
+    // Zkontrolovat a případně změnit obrázek koblihy
+    updateDonutSkin();
+}
 
-// 3. Automatické přičítání za sekundu
+// ==========================================
+// 5. AKCE A NÁKUPY
+// ==========================================
+function clickDonut() {
+    score += clickValue;
+    updateUI();
+}
+
+// Extra Sprinkles: +1 per click
+function buyUpgrade1() {
+    if (score >= upgrade1Price) {
+        score -= upgrade1Price;
+        clickValue += 1;
+        updateUI();
+    }
+}
+
+// Glaze Machine: +1 CPS
+function buyUpgrade2() {
+    if (score >= upgrade2Price) {
+        score -= upgrade2Price;
+        cps += 1;
+        updateUI();
+    }
+}
+
+// Bigger Oven: +5 CPS
+function buyUpgrade3() {
+    if (score >= upgrade3Price) {
+        score -= upgrade3Price;
+        cps += 5;
+        updateUI();
+    }
+}
+
+// Pastry Chef: +10 per click
+function buyUpgrade4() {
+    if (score >= upgrade4Price) {
+        score -= upgrade4Price;
+        clickValue += 10;
+        updateUI();
+    }
+}
+
+// ==========================================
+// 6. ČASOVAČ PRO AUTOMATICKÉ TIKÁNÍ (CPS)
+// ==========================================
 setInterval(() => {
-  if (donutsPerSecond > 0) {
-    donuts += donutsPerSecond;
-    updateDisplay();
-  }
-}, 1000);
+    if (cps > 0) {
+        score += cps / 10;
+        updateUI();
+    }
+}, 100);
 
-// První zavolání pro nastavení výchozího stavu tlačítek
-updateDisplay();
+// ==========================================
+// 7. SPUŠTĚNÍ PO NAČTENÍ STRÁNKY
+// ==========================================
+window.addEventListener('DOMContentLoaded', () => {
+    if (clickerButton) clickerButton.addEventListener('click', clickDonut);
+    if (btnUpgrade1) btnUpgrade1.addEventListener('click', buyUpgrade1);
+    if (btnUpgrade2) btnUpgrade2.addEventListener('click', buyUpgrade2);
+    if (btnUpgrade3) btnUpgrade3.addEventListener('click', buyUpgrade3);
+    if (btnUpgrade4) btnUpgrade4.addEventListener('click', buyUpgrade4);
+
+    updateUI();
+});
