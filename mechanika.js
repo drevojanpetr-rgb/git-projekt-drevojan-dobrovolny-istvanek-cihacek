@@ -5,16 +5,38 @@ let score = 0;
 let cps = 0; // Donuts per second (DPS)
 let clickValue = 1; // Donuts per click (DPC)
 
-// Pevné ceny podle vášho HTML
-const upgrade1Price = 25;  // Extra Sprinkles (+1/klik)
-const upgrade2Price = 60;  // Glaze Machine (+1/s)
-const upgrade3Price = 260; // Bigger Oven (+5/s)
-const upgrade4Price = 700; // Pastry Chef (+10/klik)
+// Pevné ceny vylepšení
+const upgrade1Price = 25;  // Extra Sprinkles
+let upgrade1Count = 0;
+
+const upgrade2Price = 60;  // Glaze Machine
+let upgrade2Count = 0;
+
+const upgrade3Price = 260; // Bigger Oven
+let upgrade3Count = 0;
+
+const upgrade4Price = 700; // Pastry Chef
+let upgrade4Count = 0;
 
 let currentMilestone = 'default';
 
 // ==========================================
-// 2. PRVKY Z HTML
+// 2. NAČTENÍ ZVUKŮ (SFX)
+// ==========================================
+const soundClick = new Audio('./Assets/SFX/Click.m4a');
+const soundSprinkles = new Audio('./Assets/SFX/Sprinkles.m4a');
+const soundGlaze = new Audio('./Assets/SFX/ExtraGlaze.m4a');
+const soundOven = new Audio('./Assets/SFX/ovenUpgraded.m4a');
+const soundChef = new Audio('./Assets/SFX/ChefHired.m4a');
+
+function playSFX(audio) {
+    if (!audio) return;
+    audio.currentTime = 0;
+    audio.play().catch(() => {});
+}
+
+// ==========================================
+// 3. PRVKY Z HTML
 // ==========================================
 const donutsDisplay = document.getElementById('donuts');
 const dpsDisplay = document.getElementById('dps');
@@ -28,18 +50,17 @@ const btnUpgrade2 = document.getElementById('upgrade2');
 const btnUpgrade3 = document.getElementById('upgrade3');
 const btnUpgrade4 = document.getElementById('upgrade4');
 
-// Cesty k obrázkům (upravte podle své složky)
+// Cesty k obrázkům
 const DONUT_DEFAULT = './Assets/Images/DonutClickerIcon.png';
 const DONUT_GOLDEN  = './Assets/Images/ClickIconGolden.png';
 const DONUT_DIAMOND = './Assets/Images/ClickIconDiamond.png';
 
 // ==========================================
-// 3. LOGIKA ZMĚNY OBRÁZKU PODLE CPS (DPS)
+// 4. LOGIKA ZMĚNY OBRÁZKU PODLE CPS (DPS)
 // ==========================================
 function updateDonutSkin() {
     if (!donutImage) return;
 
-    // Milníky nastavené podle DPS (Donuts per second)
     if (cps > 1000) {
         if (currentMilestone !== 'diamond') {
             donutImage.src = DONUT_DIAMOND;
@@ -58,20 +79,22 @@ function updateDonutSkin() {
     }
 }
 
-// Pomocná funkce pro nastavení průhlednosti (opacity) tlačítek
-function setButtonState(button, price) {
+// Pomocná funkce pro průhlednost (opacity) a počítadlo v tlačítku
+function setButtonState(button, name, price, count) {
     if (!button) return;
     const canAfford = score >= price;
     button.disabled = !canAfford;
     button.style.opacity = canAfford ? '1' : '0.5';
     button.style.cursor = canAfford ? 'pointer' : 'not-allowed';
+    
+    // Nastaví název, pevnou cenu a v závorce počet zakoupení (např. Extra Sprinkles (25) [2])
+    button.textContent = `${name} (${price}) [${count}]`;
 }
 
 // ==========================================
-// 4. AKTUALIZACE UI A OPACITY
+// 5. AKTUALIZACE UI
 // ==========================================
 function updateUI() {
-    // Uzamčení velikosti obrázku, aby po změně skinu nezměnil velikost
     if (donutImage) {
         donutImage.style.width = '200px';
         donutImage.style.height = 'auto';
@@ -82,62 +105,69 @@ function updateUI() {
     if (dpsDisplay) dpsDisplay.textContent = `Donuts per second: ${cps}`;
     if (dpcDisplay) dpcDisplay.textContent = `Donuts per click: ${clickValue}`;
 
-    // Nastavení opacity tlačítek podle aktuálního počtu donutů
-    setButtonState(btnUpgrade1, upgrade1Price);
-    setButtonState(btnUpgrade2, upgrade2Price);
-    setButtonState(btnUpgrade3, upgrade3Price);
-    setButtonState(btnUpgrade4, upgrade4Price);
+    setButtonState(btnUpgrade1, "Extra Sprinkles", upgrade1Price, upgrade1Count);
+    setButtonState(btnUpgrade2, "Glaze Machine", upgrade2Price, upgrade2Count);
+    setButtonState(btnUpgrade3, "Bigger Oven", upgrade3Price, upgrade3Count);
+    setButtonState(btnUpgrade4, "Pastry Chef", upgrade4Price, upgrade4Count);
 
-    // Zkontrolovat a případně změnit obrázek koblihy
     updateDonutSkin();
 }
 
 // ==========================================
-// 5. AKCE A NÁKUPY
+// 6. AKCE A NÁKUPY
 // ==========================================
 function clickDonut() {
     score += clickValue;
+    playSFX(soundClick);
     updateUI();
 }
 
-// Extra Sprinkles: +1 per click
+// Extra Sprinkles (+1/klik)
 function buyUpgrade1() {
     if (score >= upgrade1Price) {
         score -= upgrade1Price;
         clickValue += 1;
+        upgrade1Count++; // Přičte nákup
+        playSFX(soundSprinkles);
         updateUI();
     }
 }
 
-// Glaze Machine: +1 CPS
+// Glaze Machine (+1 CPS)
 function buyUpgrade2() {
     if (score >= upgrade2Price) {
         score -= upgrade2Price;
         cps += 1;
+        upgrade2Count++; // Přičte nákup
+        playSFX(soundGlaze);
         updateUI();
     }
 }
 
-// Bigger Oven: +5 CPS
+// Bigger Oven (+5 CPS)
 function buyUpgrade3() {
     if (score >= upgrade3Price) {
         score -= upgrade3Price;
         cps += 5;
+        upgrade3Count++; // Přičte nákup
+        playSFX(soundOven);
         updateUI();
     }
 }
 
-// Pastry Chef: +10 per click
+// Pastry Chef (+10/klik)
 function buyUpgrade4() {
     if (score >= upgrade4Price) {
         score -= upgrade4Price;
         clickValue += 10;
+        upgrade4Count++; // Přičte nákup
+        playSFX(soundChef);
         updateUI();
     }
 }
 
 // ==========================================
-// 6. ČASOVAČ PRO AUTOMATICKÉ TIKÁNÍ (CPS)
+// 7. ČASOVAČ PRO AUTOMATICKÉ TIKÁNÍ (CPS)
 // ==========================================
 setInterval(() => {
     if (cps > 0) {
@@ -147,7 +177,7 @@ setInterval(() => {
 }, 100);
 
 // ==========================================
-// 7. SPUŠTĚNÍ PO NAČTENÍ STRÁNKY
+// 8. SPUŠTĚNÍ PO NAČTENÍ STRÁNKY
 // ==========================================
 window.addEventListener('DOMContentLoaded', () => {
     if (clickerButton) clickerButton.addEventListener('click', clickDonut);
