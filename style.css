@@ -47,3 +47,21 @@ body
     border-radius: 6px;
 }
 
+.upgrade h3 
+{
+    color: #4fc3f7;
+}
+
+.upgrade p {
+    color: #bbb;
+    margin: 5px 0;
+}
+
+.upgrade button {
+    background-color: #2e7d32; 
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-weight: bold;
+}
