@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Donut Clicker</title>
+    <style href="style.css"></style>
+</head>
+<body>
+    <div class="main">
+        <div class="clicker">
+            <h2 id="donuts">Donuts: 0</h2>
+            <h3 id="dps">Donuts per second: 0</h3>
+            <h3 id="dpc">Donuts per click: 1</h3>
+            <button id="clicker-button" type="button">
+                <img src="./Assets/Images/DonutClickerIcon.png" alt="A donut">
+            </button>
+        </div>
+        <div class="upgrades">
+            <h2>Upgrades</h2>
+            <div class="upgrade" id="extra-sprinkles">
+                    <h3>Extra Sprinkles</h3>
+                    <p>Each click makes 1 extra donut.</p>
+                    <button type="button" id="upgrade1">Buy for 25 donuts</button>
+            </div>
+            <div class="upgrade" id="glaze-machine">
+                    <h3>Glaze Machine</h3>
+                    <p>Makes 1 donut automatically every second.</p>
+                    <button type="button" id="upgrade2">Buy for 60 donuts</button>
+            </div>
+            <div class="upgrade" id="bigger-oven">
+                    <h3>Bigger Oven</h3>
+                    <p>Makes 5 donuts automatically every second.</p>
+                    <button type="button" id="upgrade3">Buy for 260 donuts</button>
+            </div>
+            <div class="upgrade" id="pastry-chef">
+                    <h3>Pastry Chef</h3>
+                    <p>Each click makes 10 extra donuts.</p>
+                    <button type="button" id="upgrade4">Buy for 700 donuts</button>
+            </div>
+        </div>
+    </div>
+    <script src="mechanika.js"></script>
+</body>
+</html>
