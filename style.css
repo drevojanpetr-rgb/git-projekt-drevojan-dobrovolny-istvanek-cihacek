@@ -34,3 +34,16 @@ body
     cursor: pointer;
     margin-top: 15px;
 }
+
+#clicker-button img 
+{
+    width: 200px;
+}
+
+.upgrade {
+    background-color: #383838;
+    padding: 12px;
+    margin-top: 10px;
+    border-radius: 6px;
+}
+
