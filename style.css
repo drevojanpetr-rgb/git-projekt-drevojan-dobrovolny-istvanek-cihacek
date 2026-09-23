@@ -21,3 +21,16 @@ body
     padding: 20px;
     border-radius: 8px;
 }
+
+#donuts 
+{
+    color: #ffca28;
+}
+
+#clicker-button 
+{
+    background: none;
+    border: none;
+    cursor: pointer;
+    margin-top: 15px;
+}
