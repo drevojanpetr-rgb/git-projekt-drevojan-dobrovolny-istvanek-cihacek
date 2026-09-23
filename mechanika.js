@@ -1,4 +1,4 @@
-// Stav proměných
+// Stav hry
 let donuts = 0;
 let donutsPerClick = 1;
 let donutsPerSecond = 0;
@@ -18,11 +18,25 @@ const dpcDisplay = document.getElementById('dpc');
 const clickerButton = document.getElementById('clicker-button');
 const upgradesContainer = document.querySelector('.upgrades');
 
-// Funkce pro aktualizaci všech textů na obrazovce
+// Funkce pro aktualizaci všech textů A stavu tlačítek
 function updateDisplay() {
   donutsDisplay.textContent = `Donuts: ${donuts}`;
   dpsDisplay.textContent = `Donuts per second: ${donutsPerSecond}`;
   dpcDisplay.textContent = `Donuts per click: ${donutsPerClick}`;
+
+  // Projde všechna vylepšení a vypne/zapne tlačítka podle počtu koblížků
+  Object.keys(UPGRADES).forEach(id => {
+    const card = document.getElementById(id);
+    if (card) {
+      const btn = card.querySelector('button');
+      if (btn) {
+        const canAfford = donuts >= UPGRADES[id].cost;
+        btn.disabled = !canAfford;
+        btn.style.opacity = canAfford ? '1' : '0.5';
+        btn.style.cursor = canAfford ? 'pointer' : 'not-allowed';
+      }
+    }
+  });
 }
 
 // 1. Klikání na koblížek
@@ -55,3 +69,6 @@ setInterval(() => {
     updateDisplay();
   }
 }, 1000);
+
+// První zavolání pro nastavení výchozího stavu tlačítek
+updateDisplay();
