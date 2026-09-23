@@ -1,13 +1,41 @@
 <!DOCTYPE html>
-<html lang="cs">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Donut Clicker</title>
 </head>
 <body>
-    <div class="clicker">
-        <button id="clicker-button"><img src="./Assets/Images/DonutClickerIcon.png"></button>
+    <div class="main">
+        <div class="clicker">
+            <h2>Donuts: 0</h2>
+            <button id="clicker-button" type="button">
+                <img src="./Assets/Images/DonutClickerIcon.png" alt="A donut">
+            </button>
+        </div>
+        <div class="upgrades">
+            <h2>Upgrades</h2>
+            <div class="upgrade" id="extra-sprinkles">
+                    <h3>Extra Sprinkles</h3>
+                    <p>Each click makes 1 extra donut.</p>
+                    <button type="button">Buy for 25 donuts</button>
+            </div>
+            <div class="upgrade" id="glaze-machine">
+                    <h3>Glaze Machine</h3>
+                    <p>Makes 1 donut automatically every second.</p>
+                    <button type="button">Buy for 60 donuts</button>
+            </div>
+            <div class="upgrade" id="bigger-oven">
+                    <h3>Bigger Oven</h3>
+                    <p>Makes 5 donuts automatically every second.</p>
+                    <button type="button">Buy for 260 donuts</button>
+            </div>
+            <div class="upgrade" id="pastry-chef">
+                    <h3>Pastry Chef</h3>
+                    <p>Each click makes 10 extra donuts.</p>
+                    <button type="button">Buy for 700 donuts</button>
+            </div>
+        </div>
     </div>
 </body>
 </html>
