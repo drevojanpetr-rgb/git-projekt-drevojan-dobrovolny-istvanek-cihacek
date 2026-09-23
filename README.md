@@ -1,7 +1,18 @@
 # Donut(Cookie) Clicker
-Basic cookie clicker kopie na zkoušku práce s gitem
-webová hra obsahuje
-tlacitko na klikani a to je vse
-zapne se to otevrenim stranky :)
+Game about clicking a donut faster and faster without a purpose 
 
-dekuji za precteni sigmo
+**HOW TO RUN**
+download
+open the index.html
+
+**CREDITS**
+**-**Dřevojan
+**-**Ištvánek
+**-**Čiháček
+**-**Dobrovolný
+
+- Making this game was kinda fun but chaotic at the same time since it was our first project but its chill
+
+
+
+
