@@ -1,4 +1,4 @@
-# CookieClicker
+# Donut(Cookie) Clicker
 Basic cookie clicker kopie na zkoušku práce s gitem
 webová hra obsahuje
 tlacitko na klikani a to je vse
