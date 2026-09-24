@@ -7,13 +7,13 @@ open the index.html
 
 **CREDITS**
 
-**-** Dřevojan
+**-** Dřevojan- made custom images and sounds
 
-**-** Ištvánek
+**-** Ištvánek- javascript
 
-**-** Čiháček
+**-** Čiháček- html structure
 
-**-** Dobrovolný
+**-** Dobrovolný- css style
 
 **-** Making this game was kinda fun but chaotic at the same time since it was our first project but its chill
 
