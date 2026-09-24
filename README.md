@@ -2,8 +2,9 @@
 Game about clicking a donut faster and faster without a purpose 
 
 # HOW TO RUN
-download
-open the index.html
+**1.DOWNLOAD**
+
+**Open Donut.html**
 
 # CREDITS
 
