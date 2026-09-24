@@ -34,7 +34,8 @@ const soundSprinkles = new Audio('./Assets/SFX/Sprinkles.m4a');
 const soundGlaze = new Audio('./Assets/SFX/ExtraGlaze.m4a');
 const soundOven = new Audio('./Assets/SFX/ovenUpgraded.m4a');
 const soundChef = new Audio('./Assets/SFX/ChefHired.m4a');
-const horiMiHlava = new Audio('');
+const horiMiHlava = new Audio('./Assets/SFX/HoriMiHlava.m4a');
+const fuckinHell = new Audio('./Assets/SFX/FuckinHell.m4a')
 
 function playSFX(audio) {
     if (!audio) return;
@@ -105,7 +106,7 @@ function handleFastClickBackground() {
         if (!isFastClicking) {
             isFastClicking = true;
             // Změna pozadí na rychlý/divoký styl (pokud používáš obrázek)
-            playSFX(soundSprinkles);
+            playSFX(horiMiHlava);
             document.body.style.backgroundImage = `url('${BG_FAST}')`;
 
         }
@@ -115,6 +116,7 @@ function handleFastClickBackground() {
         backgroundResetTimer = setTimeout(() => {
             isFastClicking = false;
             document.body.style.backgroundImage = `url('${BG_NORMAL}')`;
+            playSFX(fuckinHell);
             // document.body.style.backgroundColor = ''; // pro barvu
         }, 800); // Pozadí se vrátí do normálu 0.8s po posledním rychlém kliknutí
     }
