@@ -1,0 +1,68 @@
+body {
+    font-family: Arial, sans-serif;
+    color: #ffffff;
+    margin: 20px;
+    
+    background-image: url('./Assets/Images/DonutClickerIcon.png');
+    background-repeat: repeat;      
+    background-size: 120px;       
+    background-color: #1a1a1a;      
+}
+
+.main {
+    display: flex;
+    gap: 20px;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.clicker, .upgrades {
+    flex: 1;
+    background-color: rgba(43, 43, 43, 0.9); 
+    padding: 20px;
+    border-radius: 8px;
+}
+
+#donuts {
+    color: #ffca28;
+}
+
+#clicker-button {
+    background-color: transparent;
+    border: none;
+    outline: none;
+    padding: 0;
+    cursor: pointer;
+    margin-top: 15px;
+}
+
+#clicker-button img {
+    width: 200px;
+    display: block;
+    user-select: none;
+}
+
+.upgrade {
+    background-color: #383838;
+    padding: 12px;
+    margin-top: 10px;
+    border-radius: 6px;
+}
+
+.upgrade h3 {
+    color: #4fc3f7;
+}
+
+.upgrade p {
+    color: #bbb;
+    margin: 5px 0;
+}
+
+.upgrade button {
+    background-color: #2e7d32;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-weight: bold;
+}
