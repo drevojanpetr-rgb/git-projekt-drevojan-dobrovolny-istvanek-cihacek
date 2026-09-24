@@ -13,6 +13,7 @@ open the index.html
 
 **-** Making this game was kinda fun but chaotic at the same time since it was our first project but its chill
 
+<img width="1400" height="858" alt="image" src="https://github.com/user-attachments/assets/d5393cac-2b12-49ba-970d-4437c9cc70ac" />
 
 
 
