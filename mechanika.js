@@ -20,6 +20,12 @@ let upgrade4Count = 0;
 
 let currentMilestone = 'default';
 
+// --- PROMĚNNÉ PRO DYNAMICKÉ POZADÍ ---
+let clickTimestamps = []; // Pole pro ukládání času jednotlivých kliknutí
+const CLICK_SPEED_LIMIT = 10; // Kolik kliknutí za vteřinu spustí změnu pozadí
+let isFastClicking = false;
+let backgroundResetTimer = null;
+
 // ==========================================
 // 2. NAČTENÍ ZVUKŮ (SFX)
 // ==========================================
@@ -28,6 +34,7 @@ const soundSprinkles = new Audio('./Assets/SFX/Sprinkles.m4a');
 const soundGlaze = new Audio('./Assets/SFX/ExtraGlaze.m4a');
 const soundOven = new Audio('./Assets/SFX/ovenUpgraded.m4a');
 const soundChef = new Audio('./Assets/SFX/ChefHired.m4a');
+const horiMiHlava = new Audio('');
 
 function playSFX(audio) {
     if (!audio) return;
@@ -50,13 +57,17 @@ const btnUpgrade2 = document.getElementById('upgrade2');
 const btnUpgrade3 = document.getElementById('upgrade3');
 const btnUpgrade4 = document.getElementById('upgrade4');
 
-// Cesty k obrázkům
+// Cesty k obrázkům donutů
 const DONUT_DEFAULT = './Assets/Images/DonutClickerIcon.png';
 const DONUT_GOLDEN  = './Assets/Images/ClickIconGolden.png';
 const DONUT_DIAMOND = './Assets/Images/ClickIconDiamond.png';
 
+// --- CESTY K OBRÁZKŮM POZADÍ (Zde si doplň své vlastní cesty) ---
+const BG_NORMAL = './Assets/Images/BackgroundNormal.png';
+const BG_FAST   = './Assets/Images/FireBackground.png';
+
 // ==========================================
-// 4. LOGIKA ZMĚNY OBRÁZKU PODLE CPS (DPS)
+// 4. LOGIKA ZMĚNY OBRÁZKU PODLE CPS (DPS) A RYCHLOSTI KLIKÁNÍ
 // ==========================================
 function updateDonutSkin() {
     if (!donutImage) return;
@@ -79,6 +90,36 @@ function updateDonutSkin() {
     }
 }
 
+// Funkce pro kontrolu rychlosti klikání a změnu pozadí
+function handleFastClickBackground() {
+    const now = Date.now();
+    
+    // Přidej aktuální kliknutí do historie
+    clickTimestamps.push(now);
+    
+    // Odstraň kliknutí starší než 1 vteřina (1000 ms)
+    clickTimestamps = clickTimestamps.filter(timestamp => now - timestamp < 1000);
+
+    // Pokud uživatel překročil limit kliknutí za vteřinu
+    if (clickTimestamps.length >= CLICK_SPEED_LIMIT) {
+        if (!isFastClicking) {
+            isFastClicking = true;
+            // Změna pozadí na rychlý/divoký styl (pokud používáš obrázek)
+            playSFX(soundSprinkles);
+            document.body.style.backgroundImage = `url('${BG_FAST}')`;
+
+        }
+
+        // Resetuj časovač pro návrat pozadí – pozadí zůstane rychlé, dokud uživatel nepřestane klikat
+        clearTimeout(backgroundResetTimer);
+        backgroundResetTimer = setTimeout(() => {
+            isFastClicking = false;
+            document.body.style.backgroundImage = `url('${BG_NORMAL}')`;
+            // document.body.style.backgroundColor = ''; // pro barvu
+        }, 800); // Pozadí se vrátí do normálu 0.8s po posledním rychlém kliknutí
+    }
+}
+
 // Pomocná funkce pro průhlednost (opacity) a počítadlo v tlačítku
 function setButtonState(button, name, price, count) {
     if (!button) return;
@@ -87,7 +128,6 @@ function setButtonState(button, name, price, count) {
     button.style.opacity = canAfford ? '1' : '0.5';
     button.style.cursor = canAfford ? 'pointer' : 'not-allowed';
     
-    // Nastaví název, pevnou cenu a v závorce počet zakoupení (např. Extra Sprinkles (25) [2])
     button.textContent = `${name} (${price}) [${count}]`;
 }
 
@@ -119,6 +159,10 @@ function updateUI() {
 function clickDonut() {
     score += clickValue;
     playSFX(soundClick);
+    
+    // Spustí kontrolu rychlosti klikání pro pozadí
+    handleFastClickBackground();
+    
     updateUI();
 }
 
@@ -127,7 +171,7 @@ function buyUpgrade1() {
     if (score >= upgrade1Price) {
         score -= upgrade1Price;
         clickValue += 1;
-        upgrade1Count++; // Přičte nákup
+        upgrade1Count++;
         playSFX(soundSprinkles);
         updateUI();
     }
@@ -138,7 +182,7 @@ function buyUpgrade2() {
     if (score >= upgrade2Price) {
         score -= upgrade2Price;
         cps += 1;
-        upgrade2Count++; // Přičte nákup
+        upgrade2Count++;
         playSFX(soundGlaze);
         updateUI();
     }
@@ -149,7 +193,7 @@ function buyUpgrade3() {
     if (score >= upgrade3Price) {
         score -= upgrade3Price;
         cps += 5;
-        upgrade3Count++; // Přičte nákup
+        upgrade3Count++;
         playSFX(soundOven);
         updateUI();
     }
@@ -160,7 +204,7 @@ function buyUpgrade4() {
     if (score >= upgrade4Price) {
         score -= upgrade4Price;
         clickValue += 10;
-        upgrade4Count++; // Přičte nákup
+        upgrade4Count++;
         playSFX(soundChef);
         updateUI();
     }
@@ -180,6 +224,10 @@ setInterval(() => {
 // 8. SPUŠTĚNÍ PO NAČTENÍ STRÁNKY
 // ==========================================
 window.addEventListener('DOMContentLoaded', () => {
+    // Nastavení výchozího pozadí při startu
+    document.body.style.backgroundImage = `url('${BG_NORMAL}')`;
+    document.body.style.backgroundSize = 'cover'; // Doporučeno pro správné roztažení obrázku
+
     if (clickerButton) clickerButton.addEventListener('click', clickDonut);
     if (btnUpgrade1) btnUpgrade1.addEventListener('click', buyUpgrade1);
     if (btnUpgrade2) btnUpgrade2.addEventListener('click', buyUpgrade2);
